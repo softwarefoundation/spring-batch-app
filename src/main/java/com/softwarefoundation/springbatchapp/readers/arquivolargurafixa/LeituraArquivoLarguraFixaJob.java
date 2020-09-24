@@ -1,4 +1,4 @@
-package com.softwarefoundation.springbatchapp.jobimprimetexto;
+package com.softwarefoundation.springbatchapp.readers.arquivolargurafixa;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -10,25 +10,21 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- *
- *
- *
- */
 @Configuration
 @EnableBatchProcessing
-public class ImprimeTextoBatchConfig {
+public class LeituraArquivoLarguraFixaJob {
 
     @Autowired
-    private JobBuilderFactory jobBuilderFactory;
+    private JobBuilderFactory  jobBuilderFactory;
 
     @Bean
-    public Job rotinaImprimirTextoJob(@Qualifier("imprimeTextoStep") Step step) {
+    public Job lerArquivoComLarguraFixa(@Qualifier("leituraArquivoLarguraFixaStep") Step step){
         return jobBuilderFactory
-                .get("Nome do Job")
+                .get("lerArquivoComLarguraFixa")
                 .start(step)
                 .incrementer(new RunIdIncrementer())
                 .build();
+
     }
 
 }

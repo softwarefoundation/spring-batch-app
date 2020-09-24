@@ -14,3 +14,8 @@ características e arquitetura.
 
 `spring.batch.initialize-schema=always`
 
+### Parâmetros de execução
+Para referenciar o arquivo clientes.txt, que está na raiz do projeto,
+como parâmetro de entrada adicione a linha abaixo como Program Arguments na IDE.
+
+```arquivoClientes=file:files/clientes.txt```

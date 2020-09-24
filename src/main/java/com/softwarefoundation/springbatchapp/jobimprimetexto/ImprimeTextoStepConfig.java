@@ -15,7 +15,8 @@ public class ImprimeTextoStepConfig {
     private StepBuilderFactory stepBuilderFactory;
 
     @Bean
-    public Step imprimeTextoStep( @Qualifier("ImprimeTextoTasklet") Tasklet tasklet) {
+    @Qualifier("imprimeTextoStep")
+    public Step imprimeTextoStep(@Qualifier("ImprimeTextoTasklet") Tasklet tasklet) {
         return stepBuilderFactory.
                 get("Nome do Step")
                 .tasklet(tasklet)
