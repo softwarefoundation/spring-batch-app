@@ -63,6 +63,16 @@ public class ArquivoJob {
                 .build();
     }
 
+    @Bean
+    public Job jdbcCursorJob( @Qualifier("jdbcCursorStep") Step step){
+        return jobBuilderFactory
+                .get("Registro do banco de dados")
+                .start(step)
+                .incrementer(new RunIdIncrementer())
+                .build();
+    }
+
+
 
 
 

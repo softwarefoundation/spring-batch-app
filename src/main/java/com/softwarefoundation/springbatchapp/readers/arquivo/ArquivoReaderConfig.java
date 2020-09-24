@@ -1,6 +1,11 @@
 package com.softwarefoundation.springbatchapp.readers.arquivo;
 
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.item.database.JdbcCursorItemReader;
+import org.springframework.batch.item.database.JdbcPagingItemReader;
+import org.springframework.batch.item.database.PagingQueryProvider;
+import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
+import org.springframework.batch.item.database.builder.JdbcPagingItemReaderBuilder;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.MultiResourceItemReader;
@@ -12,6 +17,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class ArquivoReaderConfig {
@@ -44,6 +52,18 @@ public class ArquivoReaderConfig {
     @Qualifier("multiplosArquivoReader")
     public MultiResourceItemReader multiplosArquivoReader(@Value("#{jobParameters['multiplos-arquivos-cliente']}") Resource[] arquivoClientes, @Qualifier("arquivoComLineMaperReader") FlatFileItemReader reader) {
         return  multiplosArquivosReader(arquivoClientes, reader);
+    }
+
+    @StepScope
+    @Bean
+    @Qualifier("jdbcCursorReader")
+    public JdbcCursorItemReader<Cliente> jdbcCursorReader(@Qualifier("appDataSource")DataSource dataSource){
+        return new JdbcCursorItemReaderBuilder<Cliente>()
+                .name("JDBC Cursor reader")
+                .dataSource(dataSource)
+                .sql("SELECT * FROM TB01_CLIENTE")
+                .rowMapper(new BeanPropertyRowMapper<Cliente>(Cliente.class))
+                .build();
     }
 
     /**
