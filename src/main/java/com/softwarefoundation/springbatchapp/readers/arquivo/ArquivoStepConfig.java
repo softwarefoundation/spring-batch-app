@@ -17,13 +17,13 @@ public class ArquivoStepConfig {
     public StepBuilderFactory stepBuilderFactory;
 
     @Bean
-    @Qualifier("leituraArquivoLarguraFixaStep")
-    public Step leituraArquivoLarguraFixaStep(ItemReader leituraArquivoLarguraFixaReader, ItemWriter<Cliente> leituraArquivoLarguraFixaWriter ){
+    @Qualifier("leituraArquivoStep")
+    public Step leituraArquivoStep(ItemReader lerArquivoReader, ItemWriter<Cliente> lerAquivoWriter ){
 
-        return stepBuilderFactory.get("leituraArquivoLarguraFixaStep")
+        return stepBuilderFactory.get("leituraArquivoStep")
                 .<Cliente,Cliente>chunk(1)
-                .reader(leituraArquivoLarguraFixaReader)
-                .writer(leituraArquivoLarguraFixaWriter)
+                .reader(lerArquivoReader)
+                .writer(lerAquivoWriter)
                 .build();
 
     }

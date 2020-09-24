@@ -2,15 +2,24 @@ package com.softwarefoundation.springbatchapp.readers.arquivo;
 
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.transform.Range;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.Resource;
 
 @Configuration
 public class ArquivoReaderConfig {
+
+    @Primary
+    @StepScope
+    @Bean
+    public FlatFileItemReader<Cliente> arquivoReader(@Value("#{jobParameters['arquivoClientes']}") Resource arquivoClientes, LineMapper lineMapper) {
+        return  arquivoCustomizadoReader(arquivoClientes,lineMapper);
+    }
 
     @StepScope
     @Bean
@@ -37,6 +46,15 @@ public class ArquivoReaderConfig {
                 .delimited()
                 .names(new String[]{"nome", "sobrenome", "idade", "email"})
                 .targetType(Cliente.class)
+                .build();
+        return reader;
+    }
+
+    private FlatFileItemReader arquivoCustomizadoReader(Resource arquivo, LineMapper lineMapper){
+        FlatFileItemReader reader = new FlatFileItemReaderBuilder()
+                .name("arquivoCustomizadoReader")
+                .resource(arquivo)
+                .lineMapper(lineMapper)
                 .build();
         return reader;
     }

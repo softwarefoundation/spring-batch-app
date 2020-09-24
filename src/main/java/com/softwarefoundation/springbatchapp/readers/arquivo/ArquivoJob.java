@@ -18,9 +18,9 @@ public class ArquivoJob {
     private JobBuilderFactory  jobBuilderFactory;
 
     @Bean
-    public Job lerArquivoComLarguraFixa(@Qualifier("leituraArquivoLarguraFixaStep") Step step){
+    public Job lerArquivo(@Qualifier("leituraArquivoStep") Step step){
         return jobBuilderFactory
-                .get("lerArquivoComLarguraFixa")
+                .get("lerArquivo")
                 .start(step)
                 .incrementer(new RunIdIncrementer())
                 .build();

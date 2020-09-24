@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 public class ArquivoWriterConfig {
 
     @Bean
-    public ItemWriter<Cliente> leituraArquivoLarguraFixaWriter(){
+    public ItemWriter leituraArquivoLarguraFixaWriter(){
         return items -> items.forEach( System.out::println);
     }
 
