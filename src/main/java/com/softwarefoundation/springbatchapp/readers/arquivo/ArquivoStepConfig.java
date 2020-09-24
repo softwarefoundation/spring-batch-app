@@ -1,4 +1,4 @@
-package com.softwarefoundation.springbatchapp.readers.arquivolargurafixa;
+package com.softwarefoundation.springbatchapp.readers.arquivo;
 
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 
-public class LeituraArquivoLarguraFixaStepConfig {
+public class ArquivoStepConfig {
 
     @Autowired
     public StepBuilderFactory stepBuilderFactory;

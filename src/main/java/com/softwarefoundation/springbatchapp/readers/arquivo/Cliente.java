@@ -1,4 +1,4 @@
-package com.softwarefoundation.springbatchapp.readers.arquivolargurafixa;
+package com.softwarefoundation.springbatchapp.readers.arquivo;
 
 public class Cliente {
 

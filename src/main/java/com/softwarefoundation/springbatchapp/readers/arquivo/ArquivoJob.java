@@ -1,4 +1,4 @@
-package com.softwarefoundation.springbatchapp.readers.arquivolargurafixa;
+package com.softwarefoundation.springbatchapp.readers.arquivo;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableBatchProcessing
-public class LeituraArquivoLarguraFixaJob {
+public class ArquivoJob {
 
     @Autowired
     private JobBuilderFactory  jobBuilderFactory;
