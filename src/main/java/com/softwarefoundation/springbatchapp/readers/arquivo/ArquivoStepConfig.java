@@ -97,6 +97,19 @@ public class ArquivoStepConfig {
                 .build();
     }
 
+    @Bean
+    public Step skipExceptionStep(@Qualifier("skipExceptionReader") JdbcCursorItemReader<Cliente> reader, ItemWriter<Cliente> writer ){
+
+        return stepBuilderFactory.get("Jdbc cursor step")
+                .<Cliente,Cliente>chunk(1)
+                .reader(reader)
+                .writer(writer)
+                .faultTolerant()
+                .skip(Exception.class)
+                .skipLimit(3)
+                .build();
+    }
+
 
 
 

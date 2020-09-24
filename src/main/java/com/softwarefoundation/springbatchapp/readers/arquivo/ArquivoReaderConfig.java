@@ -19,8 +19,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.RowMapper;
 
 import javax.sql.DataSource;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 @Configuration
 public class ArquivoReaderConfig {
@@ -89,6 +92,44 @@ public class ArquivoReaderConfig {
         query.setSortKey("id");
         return query;
     }
+
+    @StepScope
+    @Bean
+    public JdbcCursorItemReader<Cliente> skipExceptionReader(@Qualifier("appDataSource")DataSource dataSource){
+        return new JdbcCursorItemReaderBuilder<Cliente>()
+                .name("JDBC Cursor reader")
+                .dataSource(dataSource)
+                .sql("SELECT * FROM TB01_CLIENTE")
+                .rowMapper(rowMapper())
+                .build();
+    }
+
+    private RowMapper<Cliente> rowMapper() {
+        return new RowMapper<Cliente>() {
+            @Override
+            public Cliente mapRow(ResultSet rs, int i) throws SQLException {
+
+                if(rs.getRow() > 4){
+                    throw new SQLException(String.format("Encerrando a execução - Cliente %s", rs.getString("nome")));
+                }else{
+                    return clienteRowMapper(rs);
+                }
+
+            }
+        };
+    }
+
+    private Cliente clienteRowMapper(ResultSet rs) throws SQLException {
+        Cliente cliente = new Cliente();
+        cliente.setNome(rs.getString("nome"));
+        cliente.setSobrenome(rs.getString("sobrenome"));
+        cliente.setIdade(rs.getInt("idade"));
+        cliente.setEmail(rs.getString("email"));
+
+
+        return cliente;
+    }
+
 
     /**
      *

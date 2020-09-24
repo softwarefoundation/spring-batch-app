@@ -81,6 +81,18 @@ public class ArquivoJob {
                 .build();
     }
 
+    @Bean
+    public Job skipExceptionJob(@Qualifier("skipExceptionStep") Step step){
+        return jobBuilderFactory
+                .get("Ignora o registro em caso de Exception")
+                .start(step)
+                .incrementer(new RunIdIncrementer())
+                .build();
+    }
+
+
+
+
 
 
 
