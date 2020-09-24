@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+    <contextName>m-dpf-api</contextName>
+    <property resource="application.properties" />
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+    <springProfile name="dev">
+        <property name="LOG_FILE" value="/home/apps/logs/app-spring-batch-dev.log"/>
+        <property name="LOG_FILE_MAX_SIZE" value="150MB"/>
+        <property name="LOG_TOTAL_SIZE_CAP" value="1GB"/>
+        <property name="LOG_FILE_MAX_HISTORY" value="20"/>
+        <property name="URL" value="jdbc:postgresql://127.0.0.1:5432/postgres?currentSchema=logs"/>
+        <property name="USER" value="postgres"/>
+        <property name="PASSWORD" value="root"/>
+
+        <include resource="file-appender.xml"/>
+        <include resource="db-appender.xml"/>
+        
+        <root level="INFO">
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="DB"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="prod">
+        <property name="LOG_FILE" value="/home/apps/logs/app-spring-batch.log"/>
+        <property name="LOG_FILE_MAX_SIZE" value="150MB"/>
+        <property name="LOG_TOTAL_SIZE_CAP" value="1GB"/>
+        <property name="LOG_FILE_MAX_HISTORY" value="20"/>
+        <property name="URL" value="jdbc:postgresql://127.0.0.1:5432/postgres?currentSchema=logs"/>
+        <property name="USER" value="postgres"/>
+        <property name="PASSWORD" value="root"/>
+
+        <include resource="file-appender.xml"/>
+        <include resource="db-appender.xml"/>
+
+        <root level="INFO">
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="DB"/>
+        </root>
+    </springProfile>
+
+</configuration>
