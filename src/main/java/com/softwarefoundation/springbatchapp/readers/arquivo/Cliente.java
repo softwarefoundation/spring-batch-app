@@ -1,11 +1,15 @@
 package com.softwarefoundation.springbatchapp.readers.arquivo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Cliente {
 
     private String nome;
     private String sobrenome;
     private Integer idade;
     private String email;
+    private List<Transacao> transacoes = new ArrayList<>();
 
     public Cliente() {
     }
@@ -42,8 +46,16 @@ public class Cliente {
         this.email = email;
     }
 
+    public List<Transacao> getTransacoes() {
+        return transacoes;
+    }
+
+    public void setTransacoes(List<Transacao> transacoes) {
+        this.transacoes = transacoes;
+    }
+
     @Override
     public String toString() {
-        return String.format("Cliente[ nome = %s - sobrenome = %s - idade = %d - email = %s ]", getNome(), getSobrenome(), getIdade(), getEmail());
+        return String.format("Cliente[ nome = %s - sobrenome = %s - idade = %d - email = %s - Transacoes: %s]", getNome(), getSobrenome(), getIdade(), getEmail(), (transacoes.isEmpty()? "":transacoes));
     }
 }

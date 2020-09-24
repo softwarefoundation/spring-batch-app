@@ -18,13 +18,43 @@ public class ArquivoJob {
     private JobBuilderFactory  jobBuilderFactory;
 
     @Bean
-    public Job lerArquivo(@Qualifier("leituraArquivoStep") Step step){
+    public Job arquivoComLarguraFixa(@Qualifier("arquivoLarguraFixaStep") Step step){
         return jobBuilderFactory
-                .get("lerArquivo")
+                .get("Arquivo com Largura Fixa")
                 .start(step)
                 .incrementer(new RunIdIncrementer())
                 .build();
 
     }
+
+    @Bean
+    public Job arquivoComDelimitador(@Qualifier("arquivoComDelimitadorStep") Step step){
+        return jobBuilderFactory
+                .get("Arquivo com Delimitador")
+                .start(step)
+                .incrementer(new RunIdIncrementer())
+                .build();
+    }
+
+    @Bean
+    public Job arquivoMultiplosTipos(@Qualifier("arquivoMultiplosTiposStep") Step step){
+        return jobBuilderFactory
+                .get("Arquivo Multiplos Tipos")
+                .start(step)
+                .incrementer(new RunIdIncrementer())
+                .build();
+    }
+
+    @Bean
+    public Job arquivoMultiplosTiposDelagate(@Qualifier("arquivoMultiplosTiposComDelegateStep") Step step){
+        return jobBuilderFactory
+                .get("Arquivo Multiplos Tipos com Delegate")
+                .start(step)
+                .incrementer(new RunIdIncrementer())
+                .build();
+    }
+
+
+
 
 }
