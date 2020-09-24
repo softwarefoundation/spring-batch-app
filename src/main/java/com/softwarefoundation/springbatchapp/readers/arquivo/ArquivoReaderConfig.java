@@ -6,6 +6,7 @@ import org.springframework.batch.item.database.JdbcPagingItemReader;
 import org.springframework.batch.item.database.PagingQueryProvider;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
 import org.springframework.batch.item.database.builder.JdbcPagingItemReaderBuilder;
+import org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.MultiResourceItemReader;
@@ -64,6 +65,29 @@ public class ArquivoReaderConfig {
                 .sql("SELECT * FROM TB01_CLIENTE")
                 .rowMapper(new BeanPropertyRowMapper<Cliente>(Cliente.class))
                 .build();
+    }
+
+    @StepScope
+    @Bean
+    @Qualifier("jdbcPagingItemReader")
+    public JdbcPagingItemReader<Cliente> jdbcPagingItemReader(@Qualifier("appDataSource")DataSource dataSource, PagingQueryProvider queryProvider){
+        return new JdbcPagingItemReaderBuilder<Cliente>()
+                .name("JDBC paginação reader")
+                .dataSource(dataSource)
+                .queryProvider(queryProvider)
+                .pageSize(2)
+                .rowMapper(new BeanPropertyRowMapper<Cliente>(Cliente.class))
+                .build();
+    }
+
+    @Bean
+    public SqlPagingQueryProviderFactoryBean queryProvider(@Qualifier("appDataSource")DataSource dataSource){
+        SqlPagingQueryProviderFactoryBean query = new SqlPagingQueryProviderFactoryBean();
+        query.setDataSource(dataSource);
+        query.setSelectClause("SELECT *");
+        query.setFromClause("FROM TB01_CLIENTE");
+        query.setSortKey("id");
+        return query;
     }
 
     /**

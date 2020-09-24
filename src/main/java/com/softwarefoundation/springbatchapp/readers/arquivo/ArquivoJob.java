@@ -66,11 +66,21 @@ public class ArquivoJob {
     @Bean
     public Job jdbcCursorJob( @Qualifier("jdbcCursorStep") Step step){
         return jobBuilderFactory
-                .get("Registro do banco de dados")
+                .get("Registro do banco de dados com cursor")
                 .start(step)
                 .incrementer(new RunIdIncrementer())
                 .build();
     }
+
+    @Bean
+    public Job jdbcPagingItemJob(@Qualifier("jdbcPagingItemStep") Step step){
+        return jobBuilderFactory
+                .get("Registro do banco de dados com paginação")
+                .start(step)
+                .incrementer(new RunIdIncrementer())
+                .build();
+    }
+
 
 
 

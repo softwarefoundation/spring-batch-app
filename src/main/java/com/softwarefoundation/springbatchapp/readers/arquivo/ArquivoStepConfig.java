@@ -5,6 +5,7 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
+import org.springframework.batch.item.database.JdbcPagingItemReader;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.MultiResourceItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,6 +85,18 @@ public class ArquivoStepConfig {
                 .writer(writer)
                 .build();
     }
+
+    @Bean
+    @Qualifier("jdbcPagingItemStep")
+    public Step jdbcPagingItemStep(@Qualifier("jdbcPagingItemReader") JdbcPagingItemReader<Cliente> reader, ItemWriter<Cliente> writer ){
+
+        return stepBuilderFactory.get("Jdbc cursor step")
+                .<Cliente,Cliente>chunk(1)
+                .reader(reader)
+                .writer(writer)
+                .build();
+    }
+
 
 
 
