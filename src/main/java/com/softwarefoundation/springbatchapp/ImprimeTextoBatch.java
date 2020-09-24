@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @EnableBatchProcessing
-public class BatchConfig {
+public class ImprimeTextoBatch {
 
     @Autowired
     private JobBuilderFactory jobBuilderFactory;
