@@ -3,7 +3,9 @@ package com.softwarefoundation.springbatchapp.readers.arquivo;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
+import org.springframework.batch.item.file.MultiResourceItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
+import org.springframework.batch.item.file.builder.MultiResourceItemReaderBuilder;
 import org.springframework.batch.item.file.transform.Range;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,6 +37,13 @@ public class ArquivoReaderConfig {
     @Qualifier("arquivoComLineMaperReader")
     public FlatFileItemReader<Cliente> arquivoComLineMaperReader(@Value("#{jobParameters['clientes-multiplos-tipos']}") Resource arquivoClientes, LineMapper lineMapper) {
         return  arquivoCustomizadoReader(arquivoClientes,lineMapper);
+    }
+
+    @StepScope
+    @Bean
+    @Qualifier("multiplosArquivoReader")
+    public MultiResourceItemReader multiplosArquivoReader(@Value("#{jobParameters['multiplos-arquivos-cliente']}") Resource[] arquivoClientes, @Qualifier("arquivoComLineMaperReader") FlatFileItemReader reader) {
+        return  multiplosArquivosReader(arquivoClientes, reader);
     }
 
     /**
@@ -83,6 +92,22 @@ public class ArquivoReaderConfig {
                 .lineMapper(lineMapper)
                 .build();
         return reader;
+    }
+
+    /**
+     *
+     *
+     * @param arquivos
+     * @param reader
+     * @return
+     */
+    private MultiResourceItemReader multiplosArquivosReader(Resource[] arquivos, FlatFileItemReader reader){
+        MultiResourceItemReader multiResourceItemReader = new MultiResourceItemReaderBuilder()
+                .name("Multiplos arquivos Reader")
+                .resources(arquivos)
+                .delegate(new ArquivoClienteTransacaoResourceReaderConfig(reader))
+                .build();
+        return multiResourceItemReader;
     }
 
 }

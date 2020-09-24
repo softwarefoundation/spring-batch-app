@@ -54,6 +54,15 @@ public class ArquivoJob {
                 .build();
     }
 
+    @Bean
+    public Job multiplosArquivo(@Qualifier("multiplosArquivosStep") Step step){
+        return jobBuilderFactory
+                .get("Arquivo Multiplos Tipos com Delegate")
+                .start(step)
+                .incrementer(new RunIdIncrementer())
+                .build();
+    }
+
 
 
 

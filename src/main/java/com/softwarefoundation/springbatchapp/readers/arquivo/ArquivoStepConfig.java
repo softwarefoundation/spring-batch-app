@@ -5,6 +5,7 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.batch.item.file.MultiResourceItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -57,6 +58,17 @@ public class ArquivoStepConfig {
         return stepBuilderFactory.get("Arquivo com multiplos tipos com delegate")
                 .<Cliente,Cliente>chunk(1)
                 .reader(new ArquivoClienteTransacaoReader(reader))
+                .writer(writer)
+                .build();
+    }
+
+    @Bean
+    @Qualifier("multiplosArquivosStep")
+    public Step multiplosArquivosStep(@Qualifier("multiplosArquivoReader") MultiResourceItemReader<Cliente> reader, ItemWriter<Cliente> writer ){
+
+        return stepBuilderFactory.get("Multiplos arquivos")
+                .<Cliente,Cliente>chunk(1)
+                .reader(reader)
                 .writer(writer)
                 .build();
     }
