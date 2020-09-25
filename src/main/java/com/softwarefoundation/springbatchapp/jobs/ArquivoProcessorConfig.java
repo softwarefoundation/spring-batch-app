@@ -2,12 +2,15 @@ package com.softwarefoundation.springbatchapp.jobs;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.item.support.ClassifierCompositeItemProcessor;
 import org.springframework.batch.item.support.CompositeItemProcessor;
+import org.springframework.batch.item.support.builder.ClassifierCompositeItemProcessorBuilder;
 import org.springframework.batch.item.support.builder.CompositeItemProcessorBuilder;
 import org.springframework.batch.item.validator.BeanValidatingItemProcessor;
 import org.springframework.batch.item.validator.ValidatingItemProcessor;
 import org.springframework.batch.item.validator.ValidationException;
 import org.springframework.batch.item.validator.Validator;
+import org.springframework.classify.Classifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,6 +27,19 @@ public class ArquivoProcessorConfig {
     public ItemProcessor<Cliente,Cliente> validacaoArquivoProcessor() throws Exception {
         return getCompositeItemProcessor();
     }
+
+    @Bean
+    public ItemProcessor processadorClassificadorProcessor(){
+        ClassifierCompositeItemProcessor processor = new ClassifierCompositeItemProcessorBuilder<>()
+                .classifier(getClassifierItem())
+                .build();
+        return processor;
+    }
+
+    private Classifier getClassifierItem(){
+        return (Classifier<Object, ItemProcessor>) (Object o) -> (o instanceof Cliente)? new ClienteProcessor(): new TransacaoProcessor();
+    }
+
 
     private CompositeItemProcessor getCompositeItemProcessor() throws Exception {
         CompositeItemProcessor<Cliente,Cliente> processor = new CompositeItemProcessorBuilder()

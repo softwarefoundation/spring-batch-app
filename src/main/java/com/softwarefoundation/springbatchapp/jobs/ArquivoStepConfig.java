@@ -124,5 +124,16 @@ public class ArquivoStepConfig {
                 .build();
     }
 
+    @Bean
+    public Step processadorClassificadorStep(@Qualifier("arquivoComLineMaperReader") FlatFileItemReader<Cliente> reader, @Qualifier("processadorClassificadorProcessor")ItemProcessor<Cliente,Cliente> processor, ItemWriter<Cliente> writer) {
+
+        return stepBuilderFactory.get("processadorClassificadorStep")
+                .<Cliente,Cliente>chunk(1)
+                .reader(reader)
+                .processor(processor)
+                .writer(writer)
+                .build();
+    }
+
 
 }

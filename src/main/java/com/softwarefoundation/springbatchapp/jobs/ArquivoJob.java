@@ -99,6 +99,15 @@ public class ArquivoJob {
                 .build();
     }
 
+    @Bean
+    public Job processadorClassificadorJob(@Qualifier("processadorClassificadorStep") Step step){
+        return jobBuilderFactory.get("processadorClassificadorJob")
+                .start(step)
+                .incrementer(new RunIdIncrementer())
+                .build();
+    }
+
+
 
 
 
