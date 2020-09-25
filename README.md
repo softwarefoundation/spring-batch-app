@@ -1,7 +1,22 @@
+```
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::        (v2.3.4.RELEASE)
+```
+Documentação de referência:
+https://docs.spring.io/spring-batch/docs/current/reference/html/index.html
+
 # Desenvolvimento de Jobs com Spring Batch
 
 Neste projeto será desenvolvido um conjunto de Jobs para exemplificar as formas de construção,
 características e arquitetura.
+
+
+
 
 ### Configuração do Banco de Dados
 `spring.datasource.url=jdbc:postgresql://127.0.0.1:5432/postgres?currentSchema=spring_batch`
