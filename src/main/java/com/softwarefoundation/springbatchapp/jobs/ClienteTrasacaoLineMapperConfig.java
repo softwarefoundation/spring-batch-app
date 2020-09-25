@@ -1,4 +1,4 @@
-package com.softwarefoundation.springbatchapp.readers.arquivo;
+package com.softwarefoundation.springbatchapp.jobs;
 
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.FieldSetMapper;

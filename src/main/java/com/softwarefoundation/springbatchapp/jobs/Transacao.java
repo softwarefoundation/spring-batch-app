@@ -1,4 +1,4 @@
-package com.softwarefoundation.springbatchapp.readers.arquivo;
+package com.softwarefoundation.springbatchapp.jobs;
 
 public class Transacao {
 

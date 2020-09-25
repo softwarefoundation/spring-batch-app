@@ -1,4 +1,4 @@
-package com.softwarefoundation.springbatchapp.readers.arquivo;
+package com.softwarefoundation.springbatchapp.jobs;
 
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.context.annotation.Bean;

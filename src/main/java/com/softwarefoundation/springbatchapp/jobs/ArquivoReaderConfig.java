@@ -1,4 +1,4 @@
-package com.softwarefoundation.springbatchapp.readers.arquivo;
+package com.softwarefoundation.springbatchapp.jobs;
 
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
@@ -29,39 +29,38 @@ import java.sql.SQLException;
 public class ArquivoReaderConfig {
 
 
-
     @StepScope
     @Bean
     @Qualifier("arquivoComLarguraFixaReader")
     public FlatFileItemReader<Cliente> arquivoComLarguraFixaReader(@Value("#{jobParameters['clientes-largura-fixa']}") Resource arquivoClientes) {
-        return  arquivoLarguraFixaReader(arquivoClientes);
+        return arquivoLarguraFixaReader(arquivoClientes);
     }
 
     @StepScope
     @Bean
     @Qualifier("arquivoComDelimitadorReader")
     public FlatFileItemReader<Cliente> arquivoComDelimitadorReader(@Value("#{jobParameters['clientes-com-delimitador']}") Resource arquivoClientes) {
-        return  arquivoDelimitadoReader(arquivoClientes);
+        return arquivoDelimitadoReader(arquivoClientes);
     }
 
     @StepScope
     @Bean
     @Qualifier("arquivoComLineMaperReader")
     public FlatFileItemReader<Cliente> arquivoComLineMaperReader(@Value("#{jobParameters['clientes-multiplos-tipos']}") Resource arquivoClientes, LineMapper lineMapper) {
-        return  arquivoCustomizadoReader(arquivoClientes,lineMapper);
+        return arquivoCustomizadoReader(arquivoClientes, lineMapper);
     }
 
     @StepScope
     @Bean
     @Qualifier("multiplosArquivoReader")
     public MultiResourceItemReader multiplosArquivoReader(@Value("#{jobParameters['multiplos-arquivos-cliente']}") Resource[] arquivoClientes, @Qualifier("arquivoComLineMaperReader") FlatFileItemReader reader) {
-        return  multiplosArquivosReader(arquivoClientes, reader);
+        return multiplosArquivosReader(arquivoClientes, reader);
     }
 
     @StepScope
     @Bean
     @Qualifier("jdbcCursorReader")
-    public JdbcCursorItemReader<Cliente> jdbcCursorReader(@Qualifier("appDataSource")DataSource dataSource){
+    public JdbcCursorItemReader<Cliente> jdbcCursorReader(@Qualifier("appDataSource") DataSource dataSource) {
         return new JdbcCursorItemReaderBuilder<Cliente>()
                 .name("JDBC Cursor reader")
                 .dataSource(dataSource)
@@ -73,7 +72,7 @@ public class ArquivoReaderConfig {
     @StepScope
     @Bean
     @Qualifier("jdbcPagingItemReader")
-    public JdbcPagingItemReader<Cliente> jdbcPagingItemReader(@Qualifier("appDataSource")DataSource dataSource, PagingQueryProvider queryProvider){
+    public JdbcPagingItemReader<Cliente> jdbcPagingItemReader(@Qualifier("appDataSource") DataSource dataSource, PagingQueryProvider queryProvider) {
         return new JdbcPagingItemReaderBuilder<Cliente>()
                 .name("JDBC paginação reader")
                 .dataSource(dataSource)
@@ -84,7 +83,7 @@ public class ArquivoReaderConfig {
     }
 
     @Bean
-    public SqlPagingQueryProviderFactoryBean queryProvider(@Qualifier("appDataSource")DataSource dataSource){
+    public SqlPagingQueryProviderFactoryBean queryProvider(@Qualifier("appDataSource") DataSource dataSource) {
         SqlPagingQueryProviderFactoryBean query = new SqlPagingQueryProviderFactoryBean();
         query.setDataSource(dataSource);
         query.setSelectClause("SELECT *");
@@ -95,7 +94,7 @@ public class ArquivoReaderConfig {
 
     @StepScope
     @Bean
-    public JdbcCursorItemReader<Cliente> skipExceptionReader(@Qualifier("appDataSource")DataSource dataSource){
+    public JdbcCursorItemReader<Cliente> skipExceptionReader(@Qualifier("appDataSource") DataSource dataSource) {
         return new JdbcCursorItemReaderBuilder<Cliente>()
                 .name("JDBC Cursor reader")
                 .dataSource(dataSource)
@@ -104,14 +103,27 @@ public class ArquivoReaderConfig {
                 .build();
     }
 
+    @StepScope
+    @Bean
+    public FlatFileItemReader<Cliente> arquivoParaValidacaoReader(@Value("#{jobParameters['clientes-validacao']}") Resource arquivo) {
+        FlatFileItemReader reader = new FlatFileItemReaderBuilder()
+                .name("Arquivo para validação Reader")
+                .resource(arquivo)
+                .delimited()
+                .names(new String[]{"nome", "idade", "email"})
+                .targetType(Cliente.class)
+                .build();
+        return reader;
+    }
+
     private RowMapper<Cliente> rowMapper() {
         return new RowMapper<Cliente>() {
             @Override
             public Cliente mapRow(ResultSet rs, int i) throws SQLException {
 
-                if(rs.getRow() > 4){
+                if (rs.getRow() > 4) {
                     throw new SQLException(String.format("Encerrando a execução - Cliente %s", rs.getString("nome")));
-                }else{
+                } else {
                     return clienteRowMapper(rs);
                 }
 
@@ -132,11 +144,10 @@ public class ArquivoReaderConfig {
 
 
     /**
-     *
      * @param arquivo
      * @return
      */
-    private FlatFileItemReader<Cliente> arquivoLarguraFixaReader(Resource arquivo){
+    private FlatFileItemReader<Cliente> arquivoLarguraFixaReader(Resource arquivo) {
         FlatFileItemReader reader = new FlatFileItemReaderBuilder<Cliente>()
                 .name("arquivoLarguraFixaReader")
                 .resource(arquivo)
@@ -149,11 +160,10 @@ public class ArquivoReaderConfig {
     }
 
     /**
-     *
      * @param arquivo
      * @return
      */
-    private FlatFileItemReader<Cliente> arquivoDelimitadoReader(Resource arquivo){
+    private FlatFileItemReader<Cliente> arquivoDelimitadoReader(Resource arquivo) {
         FlatFileItemReader reader = new FlatFileItemReaderBuilder<Cliente>()
                 .name("arquivoDelimitadoReader")
                 .resource(arquivo)
@@ -164,13 +174,13 @@ public class ArquivoReaderConfig {
         return reader;
     }
 
+
     /**
-     *
      * @param arquivo
      * @param lineMapper
      * @return
      */
-    private FlatFileItemReader arquivoCustomizadoReader(Resource arquivo, LineMapper lineMapper){
+    private FlatFileItemReader arquivoCustomizadoReader(Resource arquivo, LineMapper lineMapper) {
         FlatFileItemReader reader = new FlatFileItemReaderBuilder()
                 .name("arquivoCustomizadoReader")
                 .resource(arquivo)
@@ -180,13 +190,11 @@ public class ArquivoReaderConfig {
     }
 
     /**
-     *
-     *
      * @param arquivos
      * @param reader
      * @return
      */
-    private MultiResourceItemReader multiplosArquivosReader(Resource[] arquivos, FlatFileItemReader reader){
+    private MultiResourceItemReader multiplosArquivosReader(Resource[] arquivos, FlatFileItemReader reader) {
         MultiResourceItemReader multiResourceItemReader = new MultiResourceItemReaderBuilder()
                 .name("Multiplos arquivos Reader")
                 .resources(arquivos)
