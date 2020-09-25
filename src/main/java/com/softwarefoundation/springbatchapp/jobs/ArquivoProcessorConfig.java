@@ -2,6 +2,8 @@ package com.softwarefoundation.springbatchapp.jobs;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.item.support.CompositeItemProcessor;
+import org.springframework.batch.item.support.builder.CompositeItemProcessorBuilder;
 import org.springframework.batch.item.validator.BeanValidatingItemProcessor;
 import org.springframework.batch.item.validator.ValidatingItemProcessor;
 import org.springframework.batch.item.validator.ValidationException;
@@ -19,13 +21,21 @@ public class ArquivoProcessorConfig {
     private Set<String> emails = new HashSet<>();
 
     @Bean
-    public ItemProcessor<Cliente,Cliente> validacaoArquivoProcessor(){
-        return getClienteValidatingItemProcessor();
+    public ItemProcessor<Cliente,Cliente> validacaoArquivoProcessor() throws Exception {
+        return getCompositeItemProcessor();
     }
 
-    private BeanValidatingItemProcessor getBeanValidatingItemProcessor(){
+    private CompositeItemProcessor getCompositeItemProcessor() throws Exception {
+        CompositeItemProcessor<Cliente,Cliente> processor = new CompositeItemProcessorBuilder()
+                .delegates(getBeanValidatingItemProcessor(), getClienteValidatingItemProcessor())
+                .build();
+        return processor;
+    }
+
+    private BeanValidatingItemProcessor getBeanValidatingItemProcessor() throws Exception {
         BeanValidatingItemProcessor processor = new BeanValidatingItemProcessor();
         processor.setFilter(true);
+        processor.afterPropertiesSet();
         return processor;
     }
 
