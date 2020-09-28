@@ -24,25 +24,32 @@ public class ArquivoProcessorConfig {
     private Set<String> emails = new HashSet<>();
 
     @Bean
-    public ItemProcessor<Cliente,Cliente> validacaoArquivoProcessor() throws Exception {
+    public ItemProcessor<Cliente, Cliente> validacaoArquivoProcessor() throws Exception {
         return getCompositeItemProcessor();
     }
 
     @Bean
-    public ItemProcessor processadorClassificadorProcessor(){
+    public ItemProcessor processadorClassificadorProcessor() {
         ClassifierCompositeItemProcessor processor = new ClassifierCompositeItemProcessorBuilder<>()
                 .classifier(getClassifierItem())
                 .build();
         return processor;
     }
 
-    private Classifier getClassifierItem(){
-        return (Classifier<Object, ItemProcessor>) (Object o) -> (o instanceof Cliente)? new ClienteProcessor(): new TransacaoProcessor();
+    private Classifier getClassifierItem() {
+
+        Classifier<Object, ItemProcessor> classifier = new Classifier<Object, ItemProcessor>() {
+            @Override
+            public ItemProcessor classify(Object o) {
+                return (o instanceof Cliente) ? new ClienteProcessor() : new TransacaoProcessor();
+            }
+        };
+
+        return classifier;
     }
 
-
     private CompositeItemProcessor getCompositeItemProcessor() throws Exception {
-        CompositeItemProcessor<Cliente,Cliente> processor = new CompositeItemProcessorBuilder()
+        CompositeItemProcessor<Cliente, Cliente> processor = new CompositeItemProcessorBuilder()
                 .delegates(getBeanValidatingItemProcessor(), getClienteValidatingItemProcessor())
                 .build();
         return processor;
@@ -55,15 +62,15 @@ public class ArquivoProcessorConfig {
         return processor;
     }
 
-    private ValidatingItemProcessor<Cliente> getClienteValidatingItemProcessor(){
+    private ValidatingItemProcessor<Cliente> getClienteValidatingItemProcessor() {
         ValidatingItemProcessor<Cliente> processor = new ValidatingItemProcessor<>();
         processor.setFilter(true);
         Validator<Cliente> validator = new Validator<Cliente>() {
             @Override
             public void validate(Cliente cliente) throws ValidationException {
-                if(emails.contains(cliente.getEmail())){
-                    throw new ValidationException(String.format("Email já foi processado: %s",cliente.getEmail()));
-                }else{
+                if (emails.contains(cliente.getEmail())) {
+                    throw new ValidationException(String.format("Email já foi processado: %s", cliente.getEmail()));
+                } else {
                     emails.add(cliente.getEmail());
                 }
             }

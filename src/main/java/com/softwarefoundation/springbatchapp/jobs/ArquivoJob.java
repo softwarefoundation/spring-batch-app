@@ -17,7 +17,7 @@ public class ArquivoJob {
     @Autowired
     private JobBuilderFactory  jobBuilderFactory;
 
-    //@Bean
+    @Bean
     public Job arquivoComLarguraFixa(@Qualifier("arquivoLarguraFixaStep") Step step){
         return jobBuilderFactory
                 .get("Arquivo com Largura Fixa")
@@ -27,7 +27,7 @@ public class ArquivoJob {
 
     }
 
-    //@Bean
+    @Bean
     public Job arquivoComDelimitador(@Qualifier("arquivoComDelimitadorStep") Step step){
         return jobBuilderFactory
                 .get("Arquivo com Delimitador")
@@ -36,7 +36,7 @@ public class ArquivoJob {
                 .build();
     }
 
-    //@Bean
+    @Bean
     public Job arquivoMultiplosTipos(@Qualifier("arquivoMultiplosTiposStep") Step step){
         return jobBuilderFactory
                 .get("Arquivo Multiplos Tipos")
@@ -45,7 +45,7 @@ public class ArquivoJob {
                 .build();
     }
 
-    //@Bean
+    @Bean
     public Job arquivoMultiplosTiposDelagate(@Qualifier("arquivoMultiplosTiposComDelegateStep") Step step){
         return jobBuilderFactory
                 .get("Arquivo Multiplos Tipos com Delegate")
@@ -54,7 +54,7 @@ public class ArquivoJob {
                 .build();
     }
 
-    //@Bean
+    @Bean
     public Job multiplosArquivo(@Qualifier("multiplosArquivosStep") Step step){
         return jobBuilderFactory
                 .get("Arquivo Multiplos Tipos com Delegate")
@@ -63,7 +63,7 @@ public class ArquivoJob {
                 .build();
     }
 
-    //@Bean
+    @Bean
     public Job jdbcCursorJob( @Qualifier("jdbcCursorStep") Step step){
         return jobBuilderFactory
                 .get("Registro do banco de dados com cursor")
@@ -72,7 +72,7 @@ public class ArquivoJob {
                 .build();
     }
 
-    //@Bean
+    @Bean
     public Job jdbcPagingItemJob(@Qualifier("jdbcPagingItemStep") Step step){
         return jobBuilderFactory
                 .get("Registro do banco de dados com paginação")
@@ -81,7 +81,7 @@ public class ArquivoJob {
                 .build();
     }
 
-    //@Bean
+    @Bean
     public Job skipExceptionJob(@Qualifier("skipExceptionStep") Step step){
         return jobBuilderFactory
                 .get("Ignora o registro em caso de Exception")

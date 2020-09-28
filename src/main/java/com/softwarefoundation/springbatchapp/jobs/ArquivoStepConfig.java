@@ -2,14 +2,12 @@ package com.softwarefoundation.springbatchapp.jobs;
 
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.database.JdbcPagingItemReader;
 import org.springframework.batch.item.file.FlatFileItemReader;
-import org.springframework.batch.item.file.FlatFileItemWriter;
 import org.springframework.batch.item.file.MultiResourceItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,7 +23,7 @@ public class ArquivoStepConfig {
 
     @Bean
     @Qualifier("arquivoLarguraFixaStep")
-    public Step arquivoLarguraFixaStep(@Qualifier("arquivoComLarguraFixaReader") ItemReader reader, ItemWriter<Cliente> writer) {
+    public Step arquivoLarguraFixaStep(@Qualifier("arquivoComLarguraFixaReader") ItemReader reader, @Qualifier("escreverEmArquivoComLarguraFixaWriter") ItemWriter<Cliente> writer) {
 
         return stepBuilderFactory.get("Arquivo largura fixa")
                 .<Cliente, Cliente>chunk(1)
@@ -47,7 +45,7 @@ public class ArquivoStepConfig {
 
     @Bean
     @Qualifier("arquivoMultiplosTiposStep")
-    public Step arquivoMultiplosTiposStep(@Qualifier("arquivoComLineMaperReader") FlatFileItemReader reader, ItemWriter<Cliente> writer) {
+    public Step arquivoMultiplosTiposStep(@Qualifier("arquivoComLineMaperReader") FlatFileItemReader reader, @Qualifier("escreverNoConsoleFixaWriter") ItemWriter<Cliente> writer) {
 
         return stepBuilderFactory.get("Arquivo com multiplos tipos")
                 .<Cliente, Cliente>chunk(1)
@@ -125,7 +123,7 @@ public class ArquivoStepConfig {
     }
 
     @Bean
-    public Step processadorClassificadorStep(@Qualifier("arquivoComLineMaperReader") FlatFileItemReader<Cliente> reader, @Qualifier("processadorClassificadorProcessor")ItemProcessor<Cliente,Cliente> processor, ItemWriter<Cliente> writer) {
+    public Step processadorClassificadorStep(@Qualifier("arquivoComLineMaperReader") FlatFileItemReader<Cliente> reader, @Qualifier("processadorClassificadorProcessor")ItemProcessor<Cliente,Cliente> processor, @Qualifier("escreverNoConsoleFixaWriter") ItemWriter<Cliente> writer) {
 
         return stepBuilderFactory.get("processadorClassificadorStep")
                 .<Cliente,Cliente>chunk(1)
